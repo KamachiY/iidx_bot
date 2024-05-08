@@ -1,5 +1,5 @@
 discord.py==2.3.2
-Flask==2.2.3
+Flask==2.3.3
 google-api-core==2.19.0
 google-api-python-client==2.127.0
 google-auth==2.29.0

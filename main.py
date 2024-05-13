@@ -28,37 +28,24 @@ class MyClient(discord.Client):
             await message.channel.send(f"あなたの今日の運勢は **{choice}** です!")
 
         if message.content == '!kadai':
-            selected_values = create_post_message(
-                target=["FAILED", "E-CLEAR", "CLEAR"])
-            # 要素ごとに文字列をつなげて出力
-            await message.channel.send(
-                f"あなたの今日の課題曲は **{selected_values[0]}** です!\n現在のランプ：{selected_values[1]}\n推奨オプション：{selected_values[2]}"
-            )
+            print_message = create_post_message(target=["FAILED", "E-CLEAR", "CLEAR"], title="あなたの今日の課題曲")
+            await message.channel.send(print_message)
 
         if message.content == '!easy':
-            selected_values = create_post_message(target=["FAILED"])
-            # 要素ごとに文字列をつなげて出力
-            await message.channel.send(
-                f"イージー狙いの課題曲は **{selected_values[0]}** です!\n現在のランプ：{selected_values[1]}\n推奨オプション：{selected_values[2]}"
-            )
+            print_message = create_post_message(target=["FAILED"], title="イージー狙いの課題曲")
+            await message.channel.send(print_message)
 
         if message.content == '!normal':
-            selected_values = create_post_message(target=["E-CLEAR"])
-            # 要素ごとに文字列をつなげて出力
-            await message.channel.send(
-                f"ノマゲ狙いの課題曲は **{selected_values[0]}** です!\n現在のランプ：{selected_values[1]}\n推奨オプション：{selected_values[2]}"
-            )
+            print_message = create_post_message(target=["E-CLEAR"], title="ノマゲ狙いの課題曲")
+            await message.channel.send(print_message)
 
         if message.content == '!hard':
-            selected_values = create_post_message(target=["CLEAR"])
-            # 要素ごとに文字列をつなげて出力
-            await message.channel.send(
-                f"ハード狙いの課題曲は **{selected_values[0]}** です!\n現在のランプ：{selected_values[1]}\n推奨オプション：{selected_values[2]}"
-            )
+            print_message = create_post_message(target=["CLEAR"], title="ハード狙いの課題曲")
+            await message.channel.send(print_message)
 
 
-# worksheetからの取得を行う関数
-def create_post_message(target):
+# worksheetからの取得を行いpostする文章を作成する関数
+def create_post_message(target, title):
     # スプレッドシートを定義
     worksheet = get_gss_worksheet(gss_name='ビートマニア☆１１地力表（マジでがんばれ）',
                                   gss_sheet_name='地力表')
@@ -71,10 +58,17 @@ def create_post_message(target):
             break  # 条件を満たす場合、ループを抜ける
 
     # 特定の列の値を取得
-    columns_to_get = [10, 11, 16]  # 曲名、ランプ、推奨OP
+    columns_to_get = [10, 11, 16, 17]  # 曲名、ランプ、推奨OP、みんなからのコメント
     selected_values = [random_row[col] for col in columns_to_get]
 
-    return selected_values
+    # 要素ごとに文字列をつなげて出力
+    print_message = f"{title}は **{selected_values[0]}** です!\n現在のランプ：{selected_values[1]}"
+    if selected_values[2]:
+        print_message += f"\n推奨オプション：{selected_values[2]}"
+    if selected_values[3]:
+        print_message += f"\nみんなからのコメント：{selected_values[3]}"
+
+    return print_message
 
 
 # worksheetの情報を返す関数
